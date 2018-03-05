@@ -16,3 +16,6 @@ testpypiupload : sdistclean sdist
 
 pypiupload : sdist
 	pipenv run twine upload --repository pypi dist/*
+
+compilestrictreadme : README.rst
+	rst2html5 --strict --verbose --link-stylesheet README.rst > README.html

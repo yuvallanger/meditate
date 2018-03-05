@@ -22,17 +22,17 @@ from setuptools import setup
 
 
 DESCRIPTION = "A command line meditation clock."
-
+LONG_DESCRIPTION = open("README.rst").read()
 
 setup(
     name="meditate",
     license="AGPLv3+",
     url="https://github.com/yuvallanger/meditate",
     description=DESCRIPTION,
-    long_description=DESCRIPTION,
+    long_description=LONG_DESCRIPTION,
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.0.11",
+    version="0.0.12",
     entry_points={
         "console_scripts": [
             "meditate=meditate:main",
