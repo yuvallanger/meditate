@@ -36,6 +36,9 @@ pylint = "*"
 pythonpy = "*"
 rope = "*"
 yapf = "*"
+wheel = "*"
+readme-renderer = "*"
+twine = "*"
 
 
 [requires]

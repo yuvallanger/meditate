@@ -24,6 +24,10 @@ from setuptools import setup
 setup(
     name="meditate",
     license="AGPLv3+",
+    url="https://github.com/yuvallanger/meditate",
+    maintainer="Yuval Langer",
+    maintainer_email="yuval.langer@gmail.com",
+    version="0.0.6",
     entry_points={
         "console_scripts": [
             "meditate=meditate:main",

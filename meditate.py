@@ -197,8 +197,6 @@ def load_config(
 
 def main() -> None:
     """Run program."""
-    print("Start meditating.")
-
     configuration = load_config(command_line_arguments)
 
     session = Session(configuration=configuration)
