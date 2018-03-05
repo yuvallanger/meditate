@@ -1,0 +1,43 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+trio = "*"
+docopt = "*"
+attrs = "*"
+"e1839a8" = {path = ".", editable = true}
+
+
+[dev-packages]
+
+"autopep8" = "*"
+elpy = "*"
+"flake8" = "*"
+"flake8-bugbear" = "*"
+"flake8-commas" = "*"
+"flake8-docstrings" = "*"
+"flake8-import-order" = "*"
+"flake8-mypy" = "*"
+importmagic = "*"
+ipython = "*"
+jedi = "*"
+jupyter-console = "*"
+monkeytype = "*"
+mypy = "*"
+"pep8-naming" = "*"
+pew = "*"
+pipenv = "*"
+pylint = "*"
+pythonpy = "*"
+rope = "*"
+yapf = "*"
+
+
+[requires]
+
+python_version = "3.6"
