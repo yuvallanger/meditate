@@ -25,9 +25,10 @@ setup(
     name="meditate",
     license="AGPLv3+",
     url="https://github.com/yuvallanger/meditate",
+    description="A command line meditation clock.",
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.0.6",
+    version="0.0.7",
     entry_points={
         "console_scripts": [
             "meditate=meditate:main",
