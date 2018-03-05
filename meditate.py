@@ -42,7 +42,6 @@ import json
 import logging
 import os
 import pathlib
-import subprocess
 
 import attr
 
@@ -108,7 +107,7 @@ class Session:
 
     configuration: Configuration = attr.ib()
 
-    def __attrs_post_init__(self):
+    def __attrs_post_init__(self) -> None:
         """Load files into memory."""
         self.interval_wave_object = simpleaudio.WaveObject.from_wave_file(
             self.configuration.interval_sound_path.as_posix(),
