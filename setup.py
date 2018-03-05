@@ -32,7 +32,7 @@ setup(
     long_description=DESCRIPTION,
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.0.10",
+    version="0.0.11",
     entry_points={
         "console_scripts": [
             "meditate=meditate:main",
