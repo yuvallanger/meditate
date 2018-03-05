@@ -30,9 +30,18 @@ setup(
     url="https://github.com/yuvallanger/meditate",
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
+    author="Yuval Langer",
+    author_email="yuval.langer@gmail.com",
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.0.13",
+    version="0.0.14",
+    keywords="meditation",
+    project_urls={
+        "Source": "https://github.com/yuvallanger/meditate",
+        "Tracker": "https://github.com/yuvallanger/meditate/issues",
+        "GitLab Mirror": "https://gitlab.com/yuvallanger/meditate",
+    },
+    packages=["."],
     entry_points={
         "console_scripts": [
             "meditate=meditate:main",
