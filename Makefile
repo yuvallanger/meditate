@@ -1,7 +1,8 @@
 .PHONY : sdist pipenvupdate
 
-sdist :
+sdist : sdistclean
 	pipenv run python setup.py sdist --verbose
+	gpg --detach-sign -a dist/*.tar.gz
 
 sdistclean :
 	rm -v dist/* || true
@@ -11,8 +12,7 @@ pipenvupdate : setup.py meditate.py README.rst LICENSE.txt MANIFEST.in Pipfile P
 
 testpypiupload : sdistclean sdist
 	gpg --detach-sign -a dist/*.tar.gz
-	pipenv run twine upload --repository testpypi dist/*.tar.gz dist/*.tar.gz.asc
+	pipenv run twine upload --repository testpypi dist/*
 
 pypiupload : sdist
-	gpg --detach-sign -a dist/*.tar.gz
-	pipenv run twine upload --repository pypi dist/*.tar.gz dist/*.tar.gz.asc
+	pipenv run twine upload --repository pypi dist/*
