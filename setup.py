@@ -21,14 +21,18 @@
 from setuptools import setup
 
 
+DESCRIPTION = "A command line meditation clock."
+
+
 setup(
     name="meditate",
     license="AGPLv3+",
     url="https://github.com/yuvallanger/meditate",
-    description="A command line meditation clock.",
+    description=DESCRIPTION,
+    long_description=DESCRIPTION,
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.0.7",
+    version="0.0.8",
     entry_points={
         "console_scripts": [
             "meditate=meditate:main",
