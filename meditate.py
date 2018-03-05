@@ -44,12 +44,14 @@ import os
 import pathlib
 import subprocess
 
-
 import attr
+
 
 import docopt
 
 import pkg_resources
+
+import simpleaudio
 
 import trio
 
@@ -65,7 +67,9 @@ logger = logging.getLogger(__name__)
 
 
 def validate_path_exists(instance, attribute, value) -> None:
+    """Make sure that the provided path's file actually exists."""
     value.resolve(strict=True)
+    logger.debug("Path %s resolved", value)
 
 
 @attr.s
@@ -104,37 +108,28 @@ class Session:
 
     configuration: Configuration = attr.ib()
 
-    @staticmethod
-    def play_sound(sound_path: os.PathLike) -> None:
-        """Play arbitrary sound file."""
-        subprocess.Popen(
-            ["mpv", "--no-resume-playback", sound_path],
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+    def __attrs_post_init__(self):
+        """Load files into memory."""
+        self.interval_wave_object = simpleaudio.WaveObject.from_wave_file(
+            self.configuration.interval_sound_path.as_posix(),
         )
-
-    def play_start_stop_sound(self) -> None:
-        """Play start and ending sound."""
-        self.play_sound(self.configuration.start_stop_sound_path)
-
-    def play_interval_sound(self) -> None:
-        """Play interval sound."""
-        self.play_sound(self.configuration.interval_sound_path)
+        self.start_stop_wave_object = simpleaudio.WaveObject.from_wave_file(
+            self.configuration.start_stop_sound_path.as_posix(),
+        )
 
     async def meditate(self) -> None:
         """Start meditation session."""
         print("Start meditation.")
-        self.play_start_stop_sound()
+        self.start_stop_wave_object.play()
 
         with trio.move_on_after(self.configuration.session_time):
             for i in itertools.count(1):
                 print(f"Interval {i} starts.")
                 await trio.sleep(self.configuration.interval_time)
                 print(f"Interval {i} ends.")
-                self.play_interval_sound()
+                self.interval_wave_object.play()
 
-        self.play_start_stop_sound()
+        self.start_stop_wave_object.play()
         print("End meditation.")
 
 

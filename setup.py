@@ -32,7 +32,7 @@ setup(
     long_description=DESCRIPTION,
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.0.9",
+    version="0.0.10",
     entry_points={
         "console_scripts": [
             "meditate=meditate:main",
@@ -45,6 +45,7 @@ setup(
     install_requires=[
         "attrs",
         "docopt",
+        "simpleaudio",
         "trio",
     ],
     python_requires="~=3.6",

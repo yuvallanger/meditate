@@ -11,6 +11,7 @@ trio = "*"
 docopt = "*"
 attrs = "*"
 "e1839a8" = {path = ".", editable = true}
+simpleaudio = "*"
 
 
 [dev-packages]
