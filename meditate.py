@@ -27,14 +27,25 @@ Usage:
   meditate [options]
 
 Options:
-  -h --help
-  --usage
-  -v --verbose
-  --debug
-  --interval-sound=PATH
-  --start-stop-sound=PATH
-  --session-time=TIME  Total meditation session time. [default: 1200]
-  --interval-time=TIME  Length of each interval in seconds. [default: 300]
+  -h --help                This hopefully helpful help message.
+
+  --usage                  A shorter version of the above.
+
+  -v --verbose             Print all the logging messages!
+
+  --debug                  Same as the above.
+
+  --interval-sound=PATH    Path to a wave file signifying the passage of
+                              time, reminding you to come back from
+                              mind wandering.
+
+  --start-stop-sound=PATH  Path to a wave file denoting the start and stop of
+                             a session.
+
+  --session-time=TIME      Total meditation session time in
+                             seconds. [default: 1200]
+
+  --interval-time=TIME     Length of each interval in seconds. [default: 300]
 """
 
 import itertools
