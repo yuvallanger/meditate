@@ -34,7 +34,13 @@ setup(
     author_email="yuval.langer@gmail.com",
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.0.14",
+    version="0.0.15",
+    classifiers=[
+        "Environment :: Console",
+        "Framework :: Trio",
+        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+        "Programming Language :: Python :: 3.6",
+    ],
     keywords="meditation",
     project_urls={
         "Source": "https://github.com/yuvallanger/meditate",
