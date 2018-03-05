@@ -23,9 +23,20 @@ from setuptools import setup
 
 setup(
     name="meditate",
+    license="AGPLv3+",
     entry_points={
         "console_scripts": [
             "meditate=meditate:main",
         ],
     },
+    include_package_data=True,
+    data_files=[
+        ("sound", ["sound/140128__jetrye__bell-meditation-cleaned.wav"]),
+    ],
+    install_requires=[
+        "attrs",
+        "docopt",
+        "trio",
+    ],
+    python_requires="~=3.6",
 )

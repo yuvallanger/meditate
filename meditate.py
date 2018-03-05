@@ -44,9 +44,12 @@ import os
 import pathlib
 import subprocess
 
+
 import attr
 
 import docopt
+
+import pkg_resources
 
 import trio
 
@@ -61,29 +64,35 @@ if (
 logger = logging.getLogger(__name__)
 
 
+def validate_path_exists(instance, attribute, value) -> None:
+    value.resolve(strict=True)
+
+
 @attr.s
 class Configuration:
     """Configuration."""
 
-    start_stop_sound_path: os.PathLike = attr.ib()
-    interval_sound_path: os.PathLike = attr.ib()
+    start_stop_sound_path: pathlib.Path = attr.ib(
+        validator=validate_path_exists,
+    )
+    interval_sound_path: pathlib.Path = attr.ib(
+        validator=validate_path_exists,
+    )
     interval_time: float = attr.ib()
     session_time: float = attr.ib()
 
 
 def make_default_config() -> Configuration:
     """Generate configuration."""
+    bell_resource_filename = pkg_resources.resource_filename(
+        __name__,
+        "sound/140128__jetrye__bell-meditation-cleaned.wav",
+    )
+    bell_file_path = pathlib.Path(bell_resource_filename)
+
     return Configuration(
-        start_stop_sound_path=(
-            pathlib.Path(
-                "~/140128__jetrye__bell-meditation-cleaned.wav",
-            ).expanduser()
-        ),
-        interval_sound_path=(
-            pathlib.Path(
-                "~/140128__jetrye__bell-meditation-cleaned.wav",
-            ).expanduser()
-        ),
+        start_stop_sound_path=bell_file_path,
+        interval_sound_path=bell_file_path,
         interval_time=1200,
         session_time=3600,
     )
