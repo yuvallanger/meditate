@@ -34,10 +34,9 @@ setup(
     author_email="yuval.langer@gmail.com",
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.0.15",
+    version="0.0.16",
     classifiers=[
         "Environment :: Console",
-        "Framework :: Trio",
         "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
         "Programming Language :: Python :: 3.6",
     ],
@@ -61,7 +60,6 @@ setup(
         "attrs",
         "docopt",
         "simpleaudio",
-        "trio",
     ],
     python_requires="~=3.6",
 )

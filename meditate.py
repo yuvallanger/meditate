@@ -48,11 +48,11 @@ Options:
   --interval-time=TIME     Length of each interval in seconds. [default: 300]
 """
 
-import itertools
 import json
 import logging
 import os
 import pathlib
+import time
 
 import attr
 
@@ -62,8 +62,6 @@ import docopt
 import pkg_resources
 
 import simpleaudio
-
-import trio
 
 command_line_arguments = docopt.docopt(__doc__)
 
@@ -127,19 +125,33 @@ class Session:
             self.configuration.start_stop_sound_path.as_posix(),
         )
 
-    async def meditate(self) -> None:
+    def meditate(self) -> None:
         """Start meditation session."""
+        number_of_whole_intervals = int(
+            self.configuration.session_time //
+            self.configuration.interval_time,
+        )
+        last_interval_duration = (
+            self.configuration.session_time -
+            number_of_whole_intervals *
+            self.configuration.interval_time
+        )
+
         print("Start meditation.")
         self.start_stop_wave_object.play()
 
-        with trio.move_on_after(self.configuration.session_time):
-            for i in itertools.count(1):
-                print(f"Interval {i} starts.")
-                await trio.sleep(self.configuration.interval_time)
-                print(f"Interval {i} ends.")
-                self.interval_wave_object.play()
+        for i in range(1, number_of_whole_intervals):
+            print(f"Interval {i} starts.")
+            time.sleep(self.configuration.interval_time)
+            print(f"Interval {i} ends.")
+            self.interval_wave_object.play()
 
-        self.start_stop_wave_object.play()
+        if last_interval_duration > 0:
+            print(f"Interval {i+1} starts.")
+            time.sleep(last_interval_duration)
+            print(f"Interval {i+1} ends.")
+
+        self.start_stop_wave_object.play().wait_done()
         print("End meditation.")
 
 
@@ -206,7 +218,7 @@ def main() -> None:
 
     session = Session(configuration=configuration)
 
-    trio.run(session.meditate)
+    session.meditate()
 
 
 if __name__ == '__main__':
