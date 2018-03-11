@@ -48,6 +48,7 @@ Options:
   --interval-time=TIME     Length of each interval in seconds. [default: 300]
 """
 
+import datetime
 import json
 import logging
 import os
@@ -137,22 +138,22 @@ class Session:
             self.configuration.interval_time
         )
 
-        print("Start meditation.")
+        print(f"{datetime.datetime.now()}: Start meditation.")
         self.start_stop_wave_object.play()
 
-        for i in range(1, number_of_whole_intervals):
-            print(f"Interval {i} starts.")
+        for i in range(1, number_of_whole_intervals + 1):
+            print(f"{datetime.datetime.now()}: Interval {i} starts.")
             time.sleep(self.configuration.interval_time)
-            print(f"Interval {i} ends.")
+            print(f"{datetime.datetime.now()}: Interval {i} ends.")
             self.interval_wave_object.play()
 
         if last_interval_duration > 0:
-            print(f"Interval {i+1} starts.")
+            print(f"{datetime.datetime.now()}: Interval {i+1} starts.")
             time.sleep(last_interval_duration)
-            print(f"Interval {i+1} ends.")
+            print(f"{datetime.datetime.now()}: Interval {i+1} ends.")
 
         self.start_stop_wave_object.play().wait_done()
-        print("End meditation.")
+        print(f"{datetime.datetime.now()}: End meditation.")
 
 
 def load_user_configuration_file() -> Configuration:
