@@ -26,7 +26,7 @@ LONG_DESCRIPTION = open("README.rst").read()
 
 setup(
     name="meditate",
-    license="AGPLv3+",
+    license="AGPL-3.0-or-later",
     url="https://github.com/yuvallanger/meditate",
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,

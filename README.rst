@@ -18,7 +18,7 @@ Installation:
 Copyright
 ---------
 
-* The `meditate package`_ is released under the `AGPLv3+`_.
+* The `meditate package`_ is released under the `AGPL-3.0-or-later`_.
 
 * The `bell sound`_, taken from `freesound.org`_, is licensed under
   CC0_.
@@ -28,4 +28,4 @@ Copyright
 .. _freesound.org: https://freesound.org/people/JetRye/sounds/140128/
 .. _CC0: https://creativecommons.org/publicdomain/zero/1.0/
 .. _`meditate package`: https://pypi.python.org/pypi/meditate/
-.. _`AGPLv3+`: https://www.gnu.org/licenses/agpl-3.0.en.html
+.. _`AGPL-3.0-or-later`: https://www.gnu.org/licenses/agpl-3.0.en.html
