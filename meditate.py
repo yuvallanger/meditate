@@ -49,11 +49,13 @@ Options:
 """
 
 import datetime
+import itertools
 import json
 import logging
 import os
 import pathlib
 import time
+import typing
 
 import attr
 
@@ -63,6 +65,8 @@ import docopt
 import pkg_resources
 
 import simpleaudio
+
+import trio
 
 command_line_arguments = docopt.docopt(__doc__)
 
@@ -75,10 +79,26 @@ if (
 logger = logging.getLogger(__name__)
 
 
-def validate_path_exists(instance, attribute, value) -> None:
+def validate_path_exists(
+        instance: typing.Any,
+        attribute: typing.Any,
+        value: pathlib.Path,
+) -> None:
     """Make sure that the provided path's file actually exists."""
     value.resolve(strict=True)
     logger.debug("Path %s resolved", value)
+
+
+def path_converter(
+        path: os.PathLike,
+) -> pathlib.Path:
+    return pathlib.Path(path)
+
+
+def float_converter(
+        number: typing.Union[str, int, float],
+) -> float:
+    return float(number)
 
 
 @attr.s
@@ -87,12 +107,18 @@ class Configuration:
 
     start_stop_sound_path: pathlib.Path = attr.ib(
         validator=validate_path_exists,
+        converter=path_converter,
     )
     interval_sound_path: pathlib.Path = attr.ib(
         validator=validate_path_exists,
+        converter=path_converter,
     )
-    interval_time: float = attr.ib()
-    session_time: float = attr.ib()
+    interval_time: float = attr.ib(
+        converter=float_converter,
+    )
+    session_time: float = attr.ib(
+        converter=float_converter,
+    )
 
 
 def make_default_config() -> Configuration:
@@ -126,34 +152,20 @@ class Session:
             self.configuration.start_stop_sound_path.as_posix(),
         )
 
-    def meditate(self) -> None:
+    async def meditate(self) -> None:
         """Start meditation session."""
-        number_of_whole_intervals = int(
-            self.configuration.session_time //
-            self.configuration.interval_time,
-        )
-        last_interval_duration = (
-            self.configuration.session_time -
-            number_of_whole_intervals *
-            self.configuration.interval_time
-        )
-
-        print(f"{datetime.datetime.now()}: Start meditation.")
+        print(f"{datetime.datetime.now()}: Start a {self.configuration.session_time} seconds meditation.")
         self.start_stop_wave_object.play()
 
-        for i in range(1, number_of_whole_intervals + 1):
-            print(f"{datetime.datetime.now()}: Interval {i} starts.")
-            time.sleep(self.configuration.interval_time)
-            print(f"{datetime.datetime.now()}: Interval {i} ends.")
-            self.interval_wave_object.play()
+        with trio.move_on_after(self.configuration.session_time):
+            for i in itertools.count(1):
+                print(f"{datetime.datetime.now()}: Interval {i} starts. ({self.configuration.session_time} seconds)")
 
-        if last_interval_duration > 0:
-            print(f"{datetime.datetime.now()}: Interval {i+1} starts.")
-            time.sleep(last_interval_duration)
-            print(f"{datetime.datetime.now()}: Interval {i+1} ends.")
+                await trio.sleep(self.configuration.interval_time)
+                self.interval_wave_object.play()
 
-        self.start_stop_wave_object.play().wait_done()
         print(f"{datetime.datetime.now()}: End meditation.")
+        self.start_stop_wave_object.play().wait_done()
 
 
 def load_user_configuration_file() -> Configuration:
@@ -171,6 +183,7 @@ def load_user_configuration_file() -> Configuration:
 
 
 def load_config(
+        *,
         command_line_arguments: dict,
 ) -> Configuration:
     """Load configuration.
@@ -181,25 +194,25 @@ def load_config(
     """
     default_configuration = make_default_config()
 
-    interval_time = float(
-        command_line_arguments["--interval-time"] or
-        default_configuration.interval_time,
+    interval_time = (
+        command_line_arguments.get("--interval-time") or
+        default_configuration.interval_time
     )
 
-    session_time = float(
-            command_line_arguments["--session-time"] or
-            default_configuration.session_time,
+    session_time = (
+        command_line_arguments.get("--session-time") or
+        default_configuration.session_time
     )
 
     interval_sound_path = pathlib.Path(
-        command_line_arguments["--interval-sound"] or
+        command_line_arguments.get("--interval-sound") or
         default_configuration.interval_sound_path,
-    ).expanduser().absolute()
+    )
 
     start_stop_sound_path = pathlib.Path(
-        command_line_arguments["--start-stop-sound"] or
+        command_line_arguments.get("--start-stop-sound") or
         default_configuration.start_stop_sound_path,
-    ).expanduser().absolute()
+    )
 
     configuration = Configuration(
         start_stop_sound_path=start_stop_sound_path,
@@ -215,11 +228,13 @@ def load_config(
 
 def main() -> None:
     """Run program."""
-    configuration = load_config(command_line_arguments)
+    configuration = load_config(
+        command_line_arguments=command_line_arguments,
+    )
 
     session = Session(configuration=configuration)
 
-    session.meditate()
+    trio.run(session.meditate)
 
 
 if __name__ == '__main__':
