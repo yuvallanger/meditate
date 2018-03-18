@@ -1,6 +1,10 @@
 TODO
 ====
 
+* ☐ Add a logging of sessions.
+
+* ☐ Use setup.cfg
+
 * ☐ Configuration
   * Use sqlite database? This is done in Android programs. Needs a
     get, set, import, and export commands.
