@@ -46,6 +46,7 @@ setup(
         "Source": "https://github.com/yuvallanger/meditate",
         "Tracker": "https://github.com/yuvallanger/meditate/issues",
         "GitLab Mirror": "https://gitlab.com/yuvallanger/meditate",
+        "BitBucket Mirror": "https://bitbucket.org/yuvallanger/meditate",
     },
     packages=["."],
     entry_points={
