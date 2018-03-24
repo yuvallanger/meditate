@@ -1,4 +1,4 @@
-.PHONY : sdist pipenvupdate
+.PHONY : sdist pipenvupdate test
 
 sdist : sdistclean
 	pipenv run python setup.py sdist --verbose
@@ -19,3 +19,8 @@ pypiupload : sdist
 
 compilestrictreadme : README.rst
 	rst2html5 --strict --verbose --link-stylesheet README.rst > README.html
+
+test :
+	pipenv run pytest test_meditate.py
+verbose_test :
+	HYPOTHESIS_VERBOSITY_LEVEL=verbose pipenv run pytest test_meditate.py

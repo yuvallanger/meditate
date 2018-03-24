@@ -54,6 +54,8 @@ import json
 import logging
 import os
 import pathlib
+import re
+import string
 import time
 import typing
 
@@ -68,15 +70,17 @@ import simpleaudio
 
 import trio
 
-command_line_arguments = docopt.docopt(__doc__)
 
-if (
-    command_line_arguments.get("--verbose")
-    or command_line_arguments.get("--debug")
-):
-    logging.basicConfig(level="DEBUG")
+class MeditateException(Exception):
+    """Our base exception class."""
 
-logger = logging.getLogger(__name__)
+    pass
+
+
+class TimeConfigurationException(MeditateException):
+    """Bad time input."""
+
+    pass
 
 
 def validate_path_exists(
@@ -85,6 +89,8 @@ def validate_path_exists(
         value: pathlib.Path,
 ) -> None:
     """Make sure that the provided path's file actually exists."""
+    logger = logging.getLogger(__name__)
+
     value.resolve(strict=True)
     logger.debug("Path %s resolved", value)
 
@@ -119,6 +125,42 @@ class Configuration:
     session_time: float = attr.ib(
         converter=float_converter,
     )
+
+
+possible_time_pattern = re.compile(
+    "(" + "|".join(
+        f"{h}{m}{s}"
+        for h in ("", r"\d+h")
+        for m in ("", r"\d+m")
+        for s in ("", r"\d+s")
+        if h or m or s
+    ) + ")",
+)
+
+
+def parse_duration_input(input_str: str) -> int:
+    old_input_str = input_str
+    input_str = input_str.strip()
+    is_legal_time_input = possible_time_pattern.search(input_str)
+    has_negatives = re.search(r"-", input_str)
+    if has_negatives or not is_legal_time_input:
+        raise TimeConfigurationException(old_input_str)
+
+    parsed_duration_seconds = 0
+
+    hours = re.search(r"([0-9]+)h", input_str)
+    minutes = re.search(r"([0-9]+)m", input_str)
+    seconds = re.search(r"([0-9]+)s", input_str)
+
+    factors = [60 * 60, 60, 1]
+    for factor, unit in zip(
+            factors,
+            [hours, minutes, seconds],
+    ):
+        if unit:
+            parsed_duration_seconds += int(unit[1]) * factor
+
+    return parsed_duration_seconds
 
 
 def make_default_config() -> Configuration:
@@ -192,6 +234,8 @@ def load_config(
       or user configuration (TODO),
       or default configuration.
     """
+    logger = logging.getLogger(__name__)
+
     default_configuration = make_default_config()
 
     interval_time = (
@@ -228,6 +272,14 @@ def load_config(
 
 def main() -> None:
     """Run program."""
+    command_line_arguments = docopt.docopt(__doc__)
+
+    if (
+            command_line_arguments.get("--verbose")
+            or command_line_arguments.get("--debug")
+    ):
+        logging.basicConfig(level="DEBUG")
+
     configuration = load_config(
         command_line_arguments=command_line_arguments,
     )

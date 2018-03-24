@@ -1,21 +1,16 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 docopt = "*"
 attrs = "*"
 "e1839a8" = {path = ".", editable = true}
 simpleaudio = "*"
 trio = "*"
 
-
 [dev-packages]
-
 "autopep8" = "*"
 elpy = "*"
 "flake8" = "*"
@@ -27,8 +22,8 @@ elpy = "*"
 importmagic = "*"
 ipython = "*"
 jedi = "*"
-jupyter-console = "*"
-monkeytype = "*"
+jupyter_console = "*"
+MonkeyType = "*"
 mypy = "*"
 "pep8-naming" = "*"
 pew = "*"
@@ -38,10 +33,10 @@ pythonpy = "*"
 rope = "*"
 yapf = "*"
 wheel = "*"
-readme-renderer = "*"
+readme_renderer = "*"
 twine = "*"
-
+hypothesis = "*"
+pytest = "*"
 
 [requires]
-
 python_version = "3.6"
