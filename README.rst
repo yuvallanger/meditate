@@ -1,4 +1,3 @@
-========
 Meditate
 ========
 
@@ -7,11 +6,15 @@ A command line meditation clock.
 Installation:
 -------------
 
-* user install: ::
+* user install:
+
+.. code:: sh
 
     pip install --user meditate
 
-* system wide (why would you do such a thing?): ::
+* system wide (why would you do such a thing?):
+
+.. code:: sh
 
     sudo pip install meditate
 
