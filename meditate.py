@@ -22,30 +22,37 @@ Usage:
   meditate [options]
            [--session-sound=PATH]
            [--interval-sound=PATH]
-           [--session-time=TIME]
-           [--interval-time=TIME]
+           [--session-duration=TIME]
+           [--interval-duration=TIME]
   meditate [options]
 
 Options:
-  -h --help                This hopefully helpful help message.
+  -h --help
+      This hopefully helpful help message.
 
-  --usage                  A shorter version of the above.
+  --usage
+      A shorter version of the above.
 
-  -v --verbose             Print all the logging messages!
+  -v --verbose
+      Print all the logging messages!
 
-  --debug                  Same as the above.
+  --debug
+      Same as the above.
 
-  --interval-sound=PATH    Path to a wave file signifying the passage of
-                              time, reminding you to come back from
-                              mind wandering.
+  --interval-sound=PATH
+      Path to a wave file signifying the passage of time,
+        reminding you to come back from mind wandering.
 
-  --start-stop-sound=PATH  Path to a wave file denoting the start and stop of
-                             a session.
+  --start-stop-sound=PATH
+      Path to a wave file denoting the start and stop of a session.
 
-  --session-time=TIME      Total meditation session time in
-                             seconds. [default: 1200]
+  --session-duration=TIME
+      Total meditation session time in seconds.
+        [default: 1200s]
 
-  --interval-time=TIME     Length of each interval in seconds. [default: 300]
+  --interval-duration=TIME
+      Length of each interval in seconds.
+        [default: 400s]
 """
 
 import datetime
@@ -55,8 +62,6 @@ import logging
 import os
 import pathlib
 import re
-import string
-import time
 import typing
 
 import attr
@@ -77,8 +82,8 @@ class MeditateException(Exception):
     pass
 
 
-class TimeConfigurationException(MeditateException):
-    """Bad time input."""
+class DurationConfigurationException(MeditateException):
+    """Bad duration input."""
 
     pass
 
@@ -95,16 +100,26 @@ def validate_path_exists(
     logger.debug("Path %s resolved", value)
 
 
-def path_converter(
+def convert_to_path(
         path: os.PathLike,
 ) -> pathlib.Path:
-    return pathlib.Path(path)
+    """Mimick `pathlib.Path()`, but doesn't confuse `mypy`'s type analysis."""
+    return pathlib.Path(path).expanduser().absolute()
 
 
-def float_converter(
+def convert_to_float(
         number: typing.Union[str, int, float],
 ) -> float:
+    """Mimick `float()`, but doesn't confuse `mypy` type analysis."""
     return float(number)
+
+
+DEFAULT_SOUND_PATH = pathlib.Path(
+    pkg_resources.resource_filename(
+        __name__,
+        "sound/140128__jetrye__bell-meditation-cleaned.wav",
+    ),
+)
 
 
 @attr.s
@@ -112,22 +127,26 @@ class Configuration:
     """Configuration."""
 
     start_stop_sound_path: pathlib.Path = attr.ib(
+        default=DEFAULT_SOUND_PATH,
         validator=validate_path_exists,
-        converter=path_converter,
+        converter=convert_to_path,
     )
     interval_sound_path: pathlib.Path = attr.ib(
+        default=DEFAULT_SOUND_PATH,
         validator=validate_path_exists,
-        converter=path_converter,
+        converter=convert_to_path,
     )
-    interval_time: float = attr.ib(
-        converter=float_converter,
+    interval_duration: float = attr.ib(
+        default=1200.0,
+        converter=convert_to_float,
     )
-    session_time: float = attr.ib(
-        converter=float_converter,
+    session_duration: float = attr.ib(
+        default=3600.0,
+        converter=convert_to_float,
     )
 
 
-possible_time_pattern = re.compile(
+possible_duration_pattern = re.compile(
     "(" + "|".join(
         f"{h}{m}{s}"
         for h in ("", r"\d+h")
@@ -138,45 +157,52 @@ possible_time_pattern = re.compile(
 )
 
 
-def parse_duration_input(input_str: str) -> int:
+def parse_duration_input(
+        *,
+        input_str: str,
+) -> float:
+    """Parse a string representing a duration into number of seconds."""
     old_input_str = input_str
     input_str = input_str.strip()
-    is_legal_time_input = possible_time_pattern.search(input_str)
-    has_negatives = re.search(r"-", input_str)
-    if has_negatives or not is_legal_time_input:
-        raise TimeConfigurationException(old_input_str)
 
-    parsed_duration_seconds = 0
-
-    hours = re.search(r"([0-9]+)h", input_str)
-    minutes = re.search(r"([0-9]+)m", input_str)
-    seconds = re.search(r"([0-9]+)s", input_str)
-
-    factors = [60 * 60, 60, 1]
-    for factor, unit in zip(
-            factors,
-            [hours, minutes, seconds],
-    ):
-        if unit:
-            parsed_duration_seconds += int(unit[1]) * factor
-
-    return parsed_duration_seconds
-
-
-def make_default_config() -> Configuration:
-    """Generate configuration."""
-    bell_resource_filename = pkg_resources.resource_filename(
-        __name__,
-        "sound/140128__jetrye__bell-meditation-cleaned.wav",
+    maybe_matching_duration = re.search(
+        r"^((?P<hours>[0-9]+)h)?"
+        r"((?P<minutes>[0-9]+)m)?"
+        r"((?P<seconds>[0-9]+)s)?$",
+        input_str,
     )
-    bell_file_path = pathlib.Path(bell_resource_filename)
-
-    return Configuration(
-        start_stop_sound_path=bell_file_path,
-        interval_sound_path=bell_file_path,
-        interval_time=1200,
-        session_time=3600,
+    matching_duration = (
+        maybe_matching_duration.groupdict()
+        if maybe_matching_duration
+        else {}
     )
+
+    maybe_hours = matching_duration.get("hours")
+    maybe_minutes = matching_duration.get("minutes")
+    maybe_seconds = matching_duration.get("seconds")
+
+    if not any((
+            maybe_hours,
+            maybe_minutes,
+            maybe_seconds,
+    )):
+        raise DurationConfigurationException(
+            f"""Received: "{old_input_str}"
+Input must be positive and in the shape of the following examples:
+1h4m2s, 4m3s, 1h4m, 2h4s, 1h, 60m, 3600s"""
+        )
+
+    hours = int(maybe_hours) if maybe_hours else 0
+    minutes = int(maybe_minutes) if maybe_minutes else 0
+    seconds = int(maybe_seconds) if maybe_seconds else 0
+
+    total_seconds = (
+        60.0 * 60 * hours +
+        60 * minutes +
+        seconds
+    )
+
+    return total_seconds
 
 
 @attr.s
@@ -196,17 +222,24 @@ class Session:
 
     async def meditate(self) -> None:
         """Start meditation session."""
-        print(f"{datetime.datetime.now()}: Start a {self.configuration.session_time} seconds meditation.")
+        print(
+            f"{datetime.datetime.utcnow()}: Start a "
+            f"{self.configuration.session_duration} "
+            f"seconds meditation.",
+        )
         self.start_stop_wave_object.play()
 
-        with trio.move_on_after(self.configuration.session_time):
+        with trio.move_on_after(self.configuration.session_duration):
             for i in itertools.count(1):
-                print(f"{datetime.datetime.now()}: Interval {i} starts. ({self.configuration.session_time} seconds)")
+                print(
+                    f"{datetime.datetime.utcnow()}: Interval {i} starts. "
+                    f"({self.configuration.session_duration} seconds)",
+                )
 
-                await trio.sleep(self.configuration.interval_time)
+                await trio.sleep(self.configuration.interval_duration)
                 self.interval_wave_object.play()
 
-        print(f"{datetime.datetime.now()}: End meditation.")
+        print(f"{datetime.datetime.utcnow()}: End meditation.")
         self.start_stop_wave_object.play().wait_done()
 
 
@@ -215,13 +248,28 @@ def load_user_configuration_file() -> Configuration:
     _home = pathlib.Path('~').expanduser()
     xdg_config_home = pathlib.Path(
         os.environ.get('XDG_CONFIG_HOME')
-        or (_home / '.config'),
-    )
-    config_filepath = xdg_config_home.joinpath('meditate.json')
+        or (_home / ".config"),
+    ) / "meditate"
+    # TODO: Replace with ConfigParse
+    config_filepath = xdg_config_home / "meditate.json"
     with open(config_filepath, 'r') as f:
         configuration = Configuration(**json.load(f))
 
     return configuration
+
+
+class AllNonesException(MeditateException):
+    """All provided arguments were None."""
+
+    pass
+
+
+def first_not_none(*maybes):
+    """Return first non-`None`."""
+    for maybe in maybes:
+        if maybe is not None:
+            return maybe
+    raise AllNonesException
 
 
 def load_config(
@@ -236,38 +284,41 @@ def load_config(
     """
     logger = logging.getLogger(__name__)
 
-    default_configuration = make_default_config()
+    our_configuration = Configuration()
 
-    interval_time = (
-        command_line_arguments.get("--interval-time") or
-        default_configuration.interval_time
+    our_configuration.interval_duration = float(
+        first_not_none(
+            parse_duration_input(
+                input_str=command_line_arguments["--interval-duration"],
+            ),
+            our_configuration.interval_duration,
+        ),
+    )
+    our_configuration.session_duration = float(
+        first_not_none(
+            parse_duration_input(
+                input_str=command_line_arguments["--session-duration"],
+            ),
+            our_configuration.start_stop_sound_path,
+        ),
     )
 
-    session_time = (
-        command_line_arguments.get("--session-time") or
-        default_configuration.session_time
-    )
+    our_configuration.interval_sound_path = pathlib.Path(
+        first_not_none(
+            command_line_arguments["--interval-sound"],
+            our_configuration.interval_sound_path,
+        ),
+    ).expanduser().absolute()
+    our_configuration.start_stop_sound_path = pathlib.Path(
+        first_not_none(
+            command_line_arguments["--start-stop-sound"],
+            our_configuration.start_stop_sound_path,
+        ),
+    ).expanduser().absolute()
 
-    interval_sound_path = pathlib.Path(
-        command_line_arguments.get("--interval-sound") or
-        default_configuration.interval_sound_path,
-    )
+    logger.debug("Configuration: %s", our_configuration)
 
-    start_stop_sound_path = pathlib.Path(
-        command_line_arguments.get("--start-stop-sound") or
-        default_configuration.start_stop_sound_path,
-    )
-
-    configuration = Configuration(
-        start_stop_sound_path=start_stop_sound_path,
-        interval_sound_path=interval_sound_path,
-        interval_time=interval_time,
-        session_time=session_time,
-    )
-
-    logger.debug("Configuration: %s", configuration)
-
-    return configuration
+    return our_configuration
 
 
 def main() -> None:

@@ -24,3 +24,8 @@ test :
 	pipenv run pytest test_meditate.py
 verbose_test :
 	HYPOTHESIS_VERBOSITY_LEVEL=verbose pipenv run pytest test_meditate.py
+interactive_test :
+	pipenv run python meditate.py --interval-duration=1s --session-duration=3s
+
+run :
+	pipenv run meditate
