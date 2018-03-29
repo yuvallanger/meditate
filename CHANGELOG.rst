@@ -16,17 +16,17 @@ The format is based on `Keep a Changelog
 Changed
 ~~~~~~~
 
-- Renamed `--interval-time` and `--session-time` to
-  `interval-duration` and `--session-duration`.
-- Input to `--interval-duration` and `--session-duration` must come
-  with time units, like this:
+- Renamed ``--interval-time`` and ``--session-time`` to
+  ``interval-duration`` and `--session-duration``.
+- Input to ``--interval-duration`` and ``--session-duration`` must
+  come with time units, like this:
 
     .. code:: sh
 
         meditate --session-duration=1h20m --interval-duration=30m
 
-    A regular expression of `(\d+h)?(\d+m)?(\d+s)?` will be legal
-    input, other than an empty string.
+  A regular expression of ``(\d+h)?(\d+m)?(\d+s)?`` will be legal
+  input, other than an empty string.
 
 
 `v0.0.17`_ - 2018-03-18
