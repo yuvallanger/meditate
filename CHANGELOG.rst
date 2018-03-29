@@ -10,6 +10,19 @@ The format is based on `Keep a Changelog
 `Unreleased`_
 -------------
 
+`v0.1.1`_ - 2018-03-28
+----------------------
+
+Added
+~~~~~
+
+- Add `restructuredtext-lint`_ in Pipfile.
+
+Changed
+~~~~~~~
+
+- Clean README.rst and CHANGELOG.rst.
+
 `v0.1.0`_ - 2018-03-28
 ----------------------
 
@@ -36,8 +49,13 @@ Changed
 Changed
 ~~~~~~~
 
-- Returned to `Trio <https://pypi.org/project/trio/>`__.
+- Returned to `Trio`_.
 
-.. _`Unreleased`: https://github.com/yuvallanger/meditate/compare/v0.1.0...HEAD
+
+.. _Trio: https://pypi.org/project/trio/
+.. _`restructuredtext-lint`: https://pypi.org/project/restructuredtext-lint/
+
+.. _`Unreleased`: https://github.com/yuvallanger/meditate/compare/v0.1.1...HEAD
+.. _`v0.1.1`: https://github.com/yuvallanger/meditate/compare/v0.1.0...v0.1.1
 .. _`v0.1.0`: https://github.com/yuvallanger/meditate/compare/v0.0.17...v0.1.0
 .. _`v0.0.17`: https://github.com/yuvallanger/meditate/compare/v0.0.16...v0.0.17
