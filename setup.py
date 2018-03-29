@@ -34,7 +34,7 @@ setup(
     author_email="yuval.langer@gmail.com",
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.1.1",
+    version="0.1.2",
     classifiers=[
         "Environment :: Console",
         "Framework :: Trio",
