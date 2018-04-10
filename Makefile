@@ -1,11 +1,14 @@
 .PHONY : sdist pipenvupdate test
 
-sdist : sdistclean
-	pipenv run python setup.py sdist --verbose
+sdist : sdistclean sdisttempclean
+	pipenv run python setup.py sdist --verbose --keep-temp
 	gpg --detach-sign -a dist/*.tar.gz
 
 sdistclean :
-	rm -v dist/* || true
+	rm -v dist/* meditate-*/ || true
+
+sdisttempclean :
+	rm -v meditate-*/ || true
 
 pipenvupdate : setup.py meditate.py README.rst LICENSE.txt MANIFEST.in Pipfile Pipfile.lock
 	pipenv update --dev --three

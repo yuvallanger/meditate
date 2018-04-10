@@ -117,7 +117,7 @@ def convert_to_float(
 DEFAULT_SOUND_PATH = pathlib.Path(
     pkg_resources.resource_filename(
         __name__,
-        "sound/140128__jetrye__bell-meditation-cleaned.wav",
+        "data/sound/140128__jetrye__bell-meditation-cleaned.wav",
     ),
 )
 
@@ -189,7 +189,7 @@ def parse_duration_input(
         raise DurationConfigurationException(
             f"""Received: "{old_input_str}"
 Input must be positive and in the shape of the following examples:
-1h4m2s, 4m3s, 1h4m, 2h4s, 1h, 60m, 3600s"""
+1h4m2s, 4m3s, 1h4m, 2h4s, 1h, 60m, 3600s""",
         )
 
     hours = int(maybe_hours) if maybe_hours else 0
@@ -233,7 +233,7 @@ class Session:
             for i in itertools.count(1):
                 print(
                     f"{datetime.datetime.utcnow()}: Interval {i} starts. "
-                    f"({self.configuration.session_duration} seconds)",
+                    f"({self.configuration.interval_duration} seconds)",
                 )
 
                 await trio.sleep(self.configuration.interval_duration)

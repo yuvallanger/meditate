@@ -34,7 +34,7 @@ setup(
     author_email="yuval.langer@gmail.com",
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="0.1.2",
+    version="0.1.3",
     classifiers=[
         "Environment :: Console",
         "Framework :: Trio",
@@ -48,21 +48,18 @@ setup(
         "GitLab Mirror": "https://gitlab.com/yuvallanger/meditate",
         "BitBucket Mirror": "https://bitbucket.org/yuvallanger/meditate",
     },
-    packages=["."],
+    packages=["meditate"],
     entry_points={
         "console_scripts": [
             "meditate=meditate:main",
         ],
     },
     include_package_data=True,
-    data_files=[
-        ("sound", ["sound/140128__jetrye__bell-meditation-cleaned.wav"]),
-    ],
     install_requires=[
         "attrs",
         "docopt",
         "simpleaudio",
         "trio",
     ],
-    python_requires="~=3.6",
+    python_requires="~=3.5",
 )
