@@ -126,6 +126,12 @@ DEFAULT_SOUND_PATH = pathlib.Path(
 class Configuration:
     """Configuration."""
 
+    interval_duration: float = attr.ib(
+        converter=convert_to_float,
+    )
+    session_duration: float = attr.ib(
+        converter=convert_to_float,
+    )
     start_stop_sound_path: pathlib.Path = attr.ib(
         default=DEFAULT_SOUND_PATH,
         validator=validate_path_exists,
@@ -135,14 +141,6 @@ class Configuration:
         default=DEFAULT_SOUND_PATH,
         validator=validate_path_exists,
         converter=convert_to_path,
-    )
-    interval_duration: float = attr.ib(
-        default=1200.0,
-        converter=convert_to_float,
-    )
-    session_duration: float = attr.ib(
-        default=3600.0,
-        converter=convert_to_float,
     )
 
 
@@ -284,37 +282,32 @@ def load_config(
     """
     logger = logging.getLogger(__name__)
 
-    our_configuration = Configuration()
-
-    our_configuration.interval_duration = float(
-        first_not_none(
-            parse_duration_input(
-                input_str=command_line_arguments["--interval-duration"],
-            ),
-            our_configuration.interval_duration,
+    interval_duration = float(
+        parse_duration_input(
+            input_str=command_line_arguments["--interval-duration"],
         ),
     )
-    our_configuration.session_duration = float(
-        first_not_none(
-            parse_duration_input(
-                input_str=command_line_arguments["--session-duration"],
-            ),
-            our_configuration.start_stop_sound_path,
+    session_duration = float(
+        parse_duration_input(
+            input_str=command_line_arguments["--session-duration"],
         ),
     )
 
-    our_configuration.interval_sound_path = pathlib.Path(
-        first_not_none(
+
+    our_configuration = Configuration(
+        interval_duration=interval_duration,
+        session_duration=session_duration,
+
+    )
+
+    if command_line_arguments["--interval-sound"]:
+        our_configuration.interval_sound_path = pathlib.Path(
             command_line_arguments["--interval-sound"],
-            our_configuration.interval_sound_path,
-        ),
-    ).expanduser().absolute()
-    our_configuration.start_stop_sound_path = pathlib.Path(
-        first_not_none(
+        ).expanduser().absolute()
+    if command_line_arguments["--start-stop-sound"]:
+        our_configuration.start_stop_sound_path = pathlib.Path(
             command_line_arguments["--start-stop-sound"],
-            our_configuration.start_stop_sound_path,
-        ),
-    ).expanduser().absolute()
+        ).expanduser().absolute()
 
     logger.debug("Configuration: %s", our_configuration)
 
