@@ -238,7 +238,12 @@ class Session:
                 self.interval_wave_object.play()
 
         print(f"{datetime.datetime.utcnow()}: End meditation.")
+        self.start_stop_wave_object.play()
+        await trio.sleep(5)
+        self.start_stop_wave_object.play()
+        await trio.sleep(5)
         self.start_stop_wave_object.play().wait_done()
+        print(f"{datetime.datetime.utcnow()}: End meditation.")
 
 
 def load_user_configuration_file() -> Configuration:
