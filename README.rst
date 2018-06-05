@@ -30,6 +30,7 @@ Mirrors
 -------
 
 * `BitBucket <https://bitbucket.org/yuvallanger/meditate>`_
+* `GitGud <https://gitgud.io/yuvallanger/meditate>`_
 * `GitHub <https://github.com/yuvallanger/meditate>`_
 
 .. _`bell sound`: sound/140128__jetrye__bell-meditation-cleaned.wav

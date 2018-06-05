@@ -34,7 +34,7 @@ setup(
     author_email="yuval.langer@gmail.com",
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="1.0.1",
+    version="1.0.2",
     classifiers=[
         "Environment :: Console",
         "Framework :: Trio",
@@ -46,6 +46,7 @@ setup(
         "Source": "https://gitlab.com/yuvallanger/meditate",
         "Tracker": "https://gitlab.com/yuvallanger/meditate/issues",
         "BitBucket Mirror": "https://bitbucket.org/yuvallanger/meditate",
+        "GitGud Mirror": "https://gitgud.io/yuvallanger/meditate",
         "GitHub Mirror": "https://github.com/yuvallanger/meditate",
     },
     packages=["meditate"],
