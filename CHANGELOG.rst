@@ -55,7 +55,7 @@ Changed
 .. _Trio: https://pypi.org/project/trio/
 .. _`restructuredtext-lint`: https://pypi.org/project/restructuredtext-lint/
 
-.. _`Unreleased`: https://github.com/yuvallanger/meditate/compare/v0.1.1...HEAD
-.. _`v0.1.1`: https://github.com/yuvallanger/meditate/compare/v0.1.0...v0.1.1
-.. _`v0.1.0`: https://github.com/yuvallanger/meditate/compare/v0.0.17...v0.1.0
-.. _`v0.0.17`: https://github.com/yuvallanger/meditate/compare/v0.0.16...v0.0.17
+.. _`Unreleased`: https://gitlab.com/yuvallanger/meditate/compare/v0.1.1...HEAD
+.. _`v0.1.1`: https://gitlab.com/yuvallanger/meditate/compare/v0.1.0...v0.1.1
+.. _`v0.1.0`: https://gitlab.com/yuvallanger/meditate/compare/v0.0.17...v0.1.0
+.. _`v0.0.17`: https://gitlab.com/yuvallanger/meditate/compare/v0.0.16...v0.0.17

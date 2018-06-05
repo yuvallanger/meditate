@@ -29,8 +29,8 @@ Copyright
 Mirrors
 -------
 
-* `GitLab <https://gitlab.com/yuvallanger/meditate>`_
 * `BitBucket <https://bitbucket.org/yuvallanger/meditate>`_
+* `GitHub <https://github.com/yuvallanger/meditate>`_
 
 .. _`bell sound`: sound/140128__jetrye__bell-meditation-cleaned.wav
 .. _freesound.org: https://freesound.org/people/JetRye/sounds/140128/

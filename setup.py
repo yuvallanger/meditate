@@ -27,14 +27,14 @@ LONG_DESCRIPTION = open("README.rst").read()
 setup(
     name="meditate",
     license="AGPL-3.0-or-later",
-    url="https://github.com/yuvallanger/meditate",
+    url="https://gitlab.com/yuvallanger/meditate",
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     author="Yuval Langer",
     author_email="yuval.langer@gmail.com",
     maintainer="Yuval Langer",
     maintainer_email="yuval.langer@gmail.com",
-    version="1.0.0",
+    version="1.0.1",
     classifiers=[
         "Environment :: Console",
         "Framework :: Trio",
@@ -43,10 +43,10 @@ setup(
     ],
     keywords="meditation",
     project_urls={
-        "Source": "https://github.com/yuvallanger/meditate",
-        "Tracker": "https://github.com/yuvallanger/meditate/issues",
-        "GitLab Mirror": "https://gitlab.com/yuvallanger/meditate",
+        "Source": "https://gitlab.com/yuvallanger/meditate",
+        "Tracker": "https://gitlab.com/yuvallanger/meditate/issues",
         "BitBucket Mirror": "https://bitbucket.org/yuvallanger/meditate",
+        "GitHub Mirror": "https://github.com/yuvallanger/meditate",
     },
     packages=["meditate"],
     entry_points={
