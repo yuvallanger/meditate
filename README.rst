@@ -26,12 +26,17 @@ Copyright
 * The `bell sound`_, taken from `freesound.org`_, is licensed under
   CC0_.
 
-Mirrors
--------
+Main Code Repository
+--------------------
+
+`GitGud <https://gitgud.io/yuvallanger/meditate>`_
+
+Code Repository Mirrors
+-----------------------
 
 * `BitBucket <https://bitbucket.org/yuvallanger/meditate>`_
-* `GitGud <https://gitgud.io/yuvallanger/meditate>`_
 * `GitHub <https://github.com/yuvallanger/meditate>`_
+* `GitLab <https://gitlab.com/yuvallanger/meditate>`_
 
 .. _`bell sound`: sound/140128__jetrye__bell-meditation-cleaned.wav
 .. _freesound.org: https://freesound.org/people/JetRye/sounds/140128/
