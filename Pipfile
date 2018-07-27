@@ -9,6 +9,8 @@ attrs = "*"
 "e1839a8" = {path = ".", editable = true}
 simpleaudio = "*"
 trio = "*"
+appdirs = "*"
+"ruamel.yaml" = "*"
 
 [dev-packages]
 "autopep8" = "*"
